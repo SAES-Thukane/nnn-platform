@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found — Never Not Nice</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#080808" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/globals.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#080808] text-white">
+
+  <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 px-6 py-4" role="navigation" aria-label="Main navigation">
+    <div class="flex items-center justify-between max-w-6xl mx-auto">
+      <a href="index.html" aria-label="Never Not Nice — Home">
+        <img src="assets/nice-logo.png" alt="NICE" class="nav-logo-img" width="80" height="28" />
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="index.html"     class="nav-link">Home</a>
+        <a href="about.html"    class="nav-link">About Us</a>
+        <a href="services.html" class="nav-link">Services</a>
+        <a href="events.html"   class="nav-link">Events</a>
+        <a href="gallery.html"  class="nav-link">Gallery</a>
+        <a href="contact.html"  class="nav-link">Contact</a>
+      </div>
+      <button id="nav-toggle" class="md:hidden text-white p-2 -mr-2"
+        aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/8 mt-4 pt-5 pb-5 flex-col gap-5 max-w-6xl mx-auto" role="menu">
+      <a href="index.html"     class="nav-link block" role="menuitem">Home</a>
+      <a href="about.html"    class="nav-link block" role="menuitem">About Us</a>
+      <a href="services.html" class="nav-link block" role="menuitem">Services</a>
+      <a href="events.html"   class="nav-link block" role="menuitem">Events</a>
+      <a href="gallery.html"  class="nav-link block" role="menuitem">Gallery</a>
+      <a href="contact.html"  class="nav-link block" role="menuitem">Contact</a>
+    </div>
+  </nav>
+
+  <main class="min-h-screen flex flex-col items-center justify-center text-center px-6">
+    <p class="section-label mb-6">404</p>
+    <h1 class="hero-wordmark text-5xl md:text-7xl font-black text-white mb-6">
+      Lost in the Archive.
+    </h1>
+    <p class="text-base mb-12" style="color:var(--color-text-muted); max-width:400px; line-height:1.8;">
+      This page doesn't exist — but the culture does. Head back to find what you're looking for.
+    </p>
+    <a href="index.html" class="btn-primary">BACK TO HOME</a>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/nav.js"></script>
+</body>
+</html>

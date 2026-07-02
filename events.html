@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events — Never Not Nice</title>
+    <meta name="description" content="Upcoming events, live calendar, and brand ecosystem — Never Not Nice." />
+    <meta name="theme-color" content="#F5F0E6" />
+    <link rel="canonical" href="https://nevernotnice.co.za/events.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nevernotnice.co.za/events.html" />
+    <meta property="og:title" content="Events — Never Not Nice" />
+    <meta property="og:description" content="Upcoming events, live calendar and the NNN brand ecosystem." />
+    <meta property="og:image" content="https://nevernotnice.co.za/assets/og-cover.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/globals.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="bg-[#F5F0E6] text-[#1A1512]">
+
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 px-6 py-4" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center justify-between max-w-6xl mx-auto">
+            <a href="index.html" aria-label="Never Not Nice — Home">
+                <img src="assets/nice-logo.png" alt="NICE" class="nav-logo-img" width="80" height="28" />
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="events.html" class="nav-link nav-link--active">Events</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <button id="nav-toggle" class="md:hidden text-[#1A1512] p-2 -mr-2"
+                    aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-[#1A1512]/10 mt-4 pt-5 pb-5 flex-col gap-5 max-w-6xl mx-auto" role="menu">
+            <a href="index.html" class="nav-link block" role="menuitem">Home</a>
+            <a href="about.html" class="nav-link block" role="menuitem">About Us</a>
+            <a href="services.html" class="nav-link block" role="menuitem">Services</a>
+            <a href="events.html" class="nav-link nav-link--active block" role="menuitem">Events</a>
+            <a href="gallery.html" class="nav-link block" role="menuitem">Gallery</a>
+            <a href="contact.html" class="nav-link block" role="menuitem">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- PAGE HEADER -->
+        <section class="pt-44 pb-12 px-6 text-center">
+            <p class="section-label">The Calendar</p>
+            <h1 class="hero-wordmark text-5xl md:text-7xl font-black text-[#1A1512]">Events &amp; IPs</h1>
+        </section>
+
+        <!-- COUNTDOWN -->
+        <section id="countdown-section" class="section-divider py-20 px-6 reveal-up" aria-label="Event countdown">
+            <div class="max-w-2xl mx-auto text-center">
+                <p class="section-label">Next Event</p>
+                <h2 id="countdown-event-name" class="text-2xl font-black text-[#1A1512] mb-12">
+                    Loading...
+                </h2>
+                <!-- Populated by countdown.js + events.js -->
+                <div id="countdown-timer" aria-live="polite" aria-label="Countdown timer">
+                    <div class="countdown__clock">
+                        <div class="countdown__unit"><span class="countdown__num">--</span><span class="countdown__label">Days</span></div>
+                        <span class="countdown__sep">:</span>
+                        <div class="countdown__unit"><span class="countdown__num">--</span><span class="countdown__label">Hrs</span></div>
+                        <span class="countdown__sep">:</span>
+                        <div class="countdown__unit"><span class="countdown__num">--</span><span class="countdown__label">Min</span></div>
+                        <span class="countdown__sep">:</span>
+                        <div class="countdown__unit"><span class="countdown__num">--</span><span class="countdown__label">Sec</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BRAND ECOSYSTEM -->
+        <section class="section-divider py-20 px-6 reveal-up" aria-labelledby="ip-heading">
+            <div class="max-w-5xl mx-auto">
+                <h2 id="ip-heading" class="section-label">Brand Ecosystem</h2>
+                <!-- Skeleton loaders replaced by events.js -->
+                <div id="ip-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                     role="list" aria-label="Sub-brands">
+                    <div class="ip-skeleton skeleton-pulse"></div>
+                    <div class="ip-skeleton skeleton-pulse"></div>
+                </div>
+                <!-- Error state — shown if fetch fails -->
+                <div id="ip-error" class="hidden state-error">
+                    <p>Unable to load brand information.</p>
+                    <p class="state-error__retry" onclick="location.reload()">Try again</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIVE EVENTS CALENDAR -->
+        <section class="section-divider py-20 px-6 pb-32 reveal-up" aria-labelledby="calendar-heading">
+            <div class="max-w-5xl mx-auto">
+                <h2 id="calendar-heading" class="section-label">Live Calendar</h2>
+                <!-- Skeleton rows replaced by events.js -->
+                <div id="events-list" role="list" aria-label="Upcoming events">
+                    <div class="event-skeleton skeleton-pulse"></div>
+                    <div class="event-skeleton skeleton-pulse" style="margin-top:1px;"></div>
+                    <div class="event-skeleton skeleton-pulse" style="margin-top:1px;"></div>
+                </div>
+                <!-- Empty state -->
+                <div id="calendar-empty" class="hidden state-empty">
+                    <p>No events scheduled yet. Check back soon.</p>
+                </div>
+                <!-- Error state -->
+                <div id="calendar-error" class="hidden state-error">
+                    <p>Unable to load events.</p>
+                    <p class="state-error__retry" onclick="location.reload()">Try again</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="section-divider py-10 px-6" role="contentinfo">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="section-label" style="margin-bottom:0;">© 2025 Never Not Nice</p>
+            <nav aria-label="Footer navigation">
+                <div class="flex gap-6">
+                    <a href="gallery.html" class="footer-link">Gallery</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- countdown.js must load before events.js — it defines startCountdown() -->
+    <script src="js/config.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/countdown.js"></script>
+    <script src="js/events.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery — Never Not Nice</title>
+    <meta name="description" content="Photography recap archives from Never Not Nice events — Joburg subculture." />
+    <meta name="theme-color" content="#F5F0E6" />
+    <link rel="canonical" href="https://nevernotnice.co.za/gallery.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nevernotnice.co.za/gallery.html" />
+    <meta property="og:title" content="Gallery — Never Not Nice" />
+    <meta property="og:description" content="Photography recap archives from Never Not Nice events." />
+    <meta property="og:image" content="https://nevernotnice.co.za/assets/og-cover.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="css/globals.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="bg-[#F5F0E6] text-[#1A1512]">
+
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 px-6 py-4" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center justify-between max-w-6xl mx-auto">
+            <a href="index.html" aria-label="Never Not Nice — Home">
+                <img src="assets/nice-logo.png" alt="NICE" class="nav-logo-img" width="80" height="28" />
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="gallery.html" class="nav-link nav-link--active">Gallery</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            <button id="nav-toggle" class="md:hidden text-[#1A1512] p-2 -mr-2"
+                    aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-[#1A1512]/10 mt-4 pt-5 pb-5 flex-col gap-5 max-w-6xl mx-auto" role="menu">
+            <a href="index.html" class="nav-link block" role="menuitem">Home</a>
+            <a href="about.html" class="nav-link block" role="menuitem">About Us</a>
+            <a href="services.html" class="nav-link block" role="menuitem">Services</a>
+            <a href="events.html" class="nav-link block" role="menuitem">Events</a>
+            <a href="gallery.html" class="nav-link nav-link--active block" role="menuitem">Gallery</a>
+            <a href="contact.html" class="nav-link block" role="menuitem">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="pt-44 pb-12 px-6 text-center reveal-up">
+            <p class="section-label">Recap Archives</p>
+            <h1 class="hero-wordmark text-5xl md:text-7xl font-black text-[#1A1512] mb-4">Gallery</h1>
+            <p style="font-size:11px; color:var(--color-text-faint); font-family:var(--font-mono);">
+                Tap any collection to enter the full experience
+            </p>
+        </section>
+
+        <section class="px-6 pb-32" aria-label="Gallery collections">
+            <div class="max-w-5xl mx-auto">
+
+                <!-- Skeleton grid shown while JS fetches — gallery.js replaces this
+                     #gallery-grid entirely with the accordion + series-row markup -->
+                <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+                     role="list" aria-label="Event gallery collections">
+                    <div class="gallery-skeleton skeleton-pulse"></div>
+                    <div class="gallery-skeleton skeleton-pulse"></div>
+                    <div class="gallery-skeleton skeleton-pulse"></div>
+                    <div class="gallery-skeleton skeleton-pulse hidden md:block"></div>
+                    <div class="gallery-skeleton skeleton-pulse hidden md:block"></div>
+                    <div class="gallery-skeleton skeleton-pulse hidden md:block"></div>
+                </div>
+
+                <!-- Empty state -->
+                <div id="gallery-empty" class="hidden state-empty">
+                    <p>No gallery collections yet.</p>
+                    <p style="margin-top:0.5rem; font-size:11px;">Check back after the next event.</p>
+                </div>
+
+                <!-- Error state -->
+                <div id="gallery-error" class="hidden state-error">
+                    <p>Unable to load gallery.</p>
+                    <p class="state-error__retry" onclick="location.reload()">Try again</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="section-divider py-10 px-6" role="contentinfo">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="section-label" style="margin-bottom:0;">© 2025 Never Not Nice</p>
+            <nav aria-label="Footer navigation">
+                <div class="flex gap-6">
+                    <a href="events.html" class="footer-link">Events</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+</html>

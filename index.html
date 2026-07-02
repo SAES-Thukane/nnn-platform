@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta -->
+    <title>Never Not Nice — Curating JHB's Subculture Archives</title>
+    <meta name="description" content="Never Not Nice is Johannesburg's premier creative house — curating underground music, fashion, and cultural events through Between Us (BÜ) and Archive." />
+    <meta name="theme-color" content="#F5F0E6" />
+    <link rel="canonical" href="https://nevernotnice.co.za/" />
+
+    <!-- Open Graph — controls WhatsApp, Instagram DM, Twitter previews -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nevernotnice.co.za/" />
+    <meta property="og:title" content="Never Not Nice — Curating JHB's Subculture Archives" />
+    <meta property="og:description" content="Between Us (BÜ) and Archive — underground music, fashion and culture events in Joburg." />
+    <meta property="og:image" content="https://nevernotnice.co.za/assets/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Never Not Nice" />
+    <meta property="og:locale" content="en_ZA" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Never Not Nice — Curating JHB's Subculture Archives" />
+    <meta name="twitter:description" content="Between Us (BÜ) and Archive — underground music, fashion and culture events in Joburg." />
+    <meta name="twitter:image" content="https://nevernotnice.co.za/assets/og-cover.jpg" />
+
+    <!-- Font preconnect — starts DNS early, speeds up font load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/globals.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Vercel Analytics — zero config, free, enables from day one -->
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="bg-[#F5F0E6] text-[#1A1512]">
+
+    <!-- ============================================================
+         NAVIGATION
+         IDs used by nav.js:
+           #main-nav    — scroll class toggled here
+           #nav-toggle  — hamburger button (one per page)
+           #mobile-menu — dropdown (one per page)
+         Never duplicate these IDs on the same page.
+         ============================================================ -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 px-6 py-4" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center justify-between max-w-6xl mx-auto">
+
+            <!-- Logo -->
+            <a href="index.html" aria-label="Never Not Nice — Home">
+                <img src="assets/nice-logo.png"
+                     alt="NICE"
+                     class="nav-logo-img"
+                     width="80"
+                     height="28" />
+            </a>
+
+            <!-- Desktop links -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="index.html" class="nav-link nav-link--active">Home</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="events.html" class="nav-link">Events</a>
+                <a href="gallery.html" class="nav-link">Gallery</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+
+            <!-- Hamburger button — mobile only -->
+            <button id="nav-toggle"
+                    class="md:hidden text-[#1A1512] p-2 -mr-2"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile dropdown — id="mobile-menu" is unique per page -->
+        <div id="mobile-menu"
+             class="hidden md:hidden border-t border-[#1A1512]/10 mt-4 pt-5 pb-5 flex-col gap-5 max-w-6xl mx-auto"
+             role="menu">
+            <a href="index.html" class="nav-link block" role="menuitem">Home</a>
+            <a href="about.html" class="nav-link block" role="menuitem">About Us</a>
+            <a href="services.html" class="nav-link block" role="menuitem">Services</a>
+            <a href="events.html" class="nav-link block" role="menuitem">Events</a>
+            <a href="gallery.html" class="nav-link block" role="menuitem">Gallery</a>
+            <a href="contact.html" class="nav-link block" role="menuitem">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         HERO
+         Headline and CTA populated at runtime by home.js
+         Static fallback text renders while fetch is in flight
+         ============================================================ -->
+    <main>
+        <section id="hero-section"
+                 class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden"
+                 aria-labelledby="hero-headline">
+
+            <!-- Subtle grid lines — decorative only -->
+            <div class="absolute inset-0 opacity-[0.04] pointer-events-none"
+                 style="background-image: linear-gradient(rgba(26,21,16,1) 1px, transparent 1px), linear-gradient(90deg, rgba(26,21,16,1) 1px, transparent 1px); background-size: 60px 60px;"
+                 aria-hidden="true">
+            </div>
+
+            <!-- UI/UX PATCH — hero video layer. Ships with a cream fallback:
+                 if index_hero_ambient.mp4 isn't in /assets yet, this div just
+                 shows var(--color-bg-raised), never a broken player. -->
+            <div class="hero-video-layer" aria-hidden="true">
+                <video autoplay muted loop playsinline poster="assets/index-hero-poster.jpg">
+                    <source src="assets/index_hero_ambient.mp4" type="video/mp4" />
+                </video>
+                <div class="hero-video-scrim"></div>
+            </div>
+
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <p class="section-label mb-6">Joburg · Subculture Archives</p>
+
+                <!-- Populated by home.js — fallback shown until fetch resolves -->
+                <h1 id="hero-headline" class="hero-wordmark text-5xl sm:text-6xl md:text-8xl font-black text-[#1A1512] mb-10">
+                    Never Not Nice.
+                </h1>
+
+                <!-- href and text populated by home.js -->
+                <a id="hero-cta" href="events.html" class="btn-primary">
+                    ENTER THE ARCHIVE
+                </a>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3" aria-hidden="true">
+                <span class="section-label" style="margin-bottom:0;">Scroll</span>
+                <div class="w-px h-10 bg-gradient-to-b from-[#1A1512]/20 to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- BRAND PILLARS STRIP -->
+        <section class="section-divider py-20 px-6 reveal-up" aria-label="Brand overview">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                <div>
+                    <p class="section-label">The House</p>
+                    <p class="font-black text-[#1A1512] text-xl mb-2">Never Not Nice</p>
+                    <p class="text-sm leading-relaxed" style="color:var(--color-text-muted)">Parent creative house &amp; umbrella brand</p>
+                </div>
+                <div class="md:border-x md:px-12" style="border-color:var(--color-border)">
+                    <p class="section-label">The Event Series</p>
+                    <p class="font-black text-[#1A1512] text-xl mb-2">Between Us (BÜ)</p>
+                    <p class="text-sm leading-relaxed" style="color:var(--color-text-muted)">Flagship series · Proven &amp; established</p>
+                </div>
+                <div>
+                    <p class="section-label">The Concept</p>
+                    <p class="font-black text-[#1A1512] text-xl mb-2">Archive</p>
+                    <p class="text-sm leading-relaxed" style="color:var(--color-text-muted)">Ultra-exclusive underground concept · Aug 1</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- UI/UX PATCH — 4-column feature grid. Images ship as graceful
+             placeholders (onerror hides broken img, cream block remains
+             with its label) until the real assets/index_grid_feature_*.webp
+             files are added per the asset manifest. -->
+        <section class="section-divider py-24 px-6 reveal-up" aria-label="Featured moments">
+            <div class="max-w-6xl mx-auto">
+                <p class="section-label">Featured</p>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <img src="assets/index_grid_feature_1.webp" alt="" loading="lazy"
+                             onerror="this.remove()" />
+                        <p class="feature-card__label">Between Us</p>
+                    </div>
+                    <div class="feature-card">
+                        <img src="assets/index_grid_feature_2.webp" alt="" loading="lazy"
+                             onerror="this.remove()" />
+                        <p class="feature-card__label">Archive</p>
+                    </div>
+                    <div class="feature-card">
+                        <img src="assets/index_grid_feature_3.webp" alt="" loading="lazy"
+                             onerror="this.remove()" />
+                        <p class="feature-card__label">Joburg</p>
+                    </div>
+                    <div class="feature-card">
+                        <img src="assets/index_grid_feature_4.webp" alt="" loading="lazy"
+                             onerror="this.remove()" />
+                        <p class="feature-card__label">The Archive</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EMAIL CTA BAND -->
+        <section class="section-divider py-20 px-6 text-center reveal-up" aria-label="Contact">
+            <p class="section-label">Get in Touch</p>
+            <!-- Populated by home.js with company_email from Supabase -->
+            <a href="mailto:hello@nevernotnice.co.za"
+               class="contact-email font-black text-[#1A1512] hover:opacity-60 transition-opacity"
+               style="font-size: clamp(1.25rem, 4vw, 2.5rem);">
+                hello@nevernotnice.co.za
+            </a>
+            <div class="mt-8">
+                <a href="contact.html" class="section-label hover:text-[#1A1512] transition-colors" style="cursor:pointer;">
+                    View Contact Page →
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="section-divider py-10 px-6" role="contentinfo">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="section-label" style="margin-bottom:0;">© 2025 Never Not Nice</p>
+            <nav aria-label="Footer navigation">
+                <div class="flex gap-6">
+                    <a href="events.html" class="footer-link">Events</a>
+                    <a href="gallery.html" class="footer-link">Gallery</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- Scripts: config.js always first — defines nnnFetch() used by all others -->
+    <script src="js/config.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/motion.js"></script>
+    <script src="js/home.js"></script>
+</body>
+</html>

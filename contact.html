@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Never Not Nice</title>
+  <meta name="description" content="Get in touch with Never Not Nice — general inquiries, bookings and partnerships." />
+  <meta name="theme-color" content="#080808" />
+  <link rel="canonical" href="https://nevernotnice.co.za/contact.html" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://nevernotnice.co.za/contact.html" />
+  <meta property="og:title"       content="Contact — Never Not Nice" />
+  <meta property="og:description" content="Get in touch with Never Not Nice for bookings, partnerships and general inquiries." />
+  <meta property="og:image"       content="https://nevernotnice.co.za/assets/og-cover.jpg" />
+  <meta name="twitter:card"       content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="css/globals.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body class="bg-[#080808] text-white">
+
+  <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 px-6 py-4" role="navigation" aria-label="Main navigation">
+    <div class="flex items-center justify-between max-w-6xl mx-auto">
+      <a href="index.html" aria-label="Never Not Nice — Home">
+        <img src="assets/nice-logo.png" alt="NICE" class="nav-logo-img" width="80" height="28" />
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="index.html"     class="nav-link">Home</a>
+        <a href="about.html"    class="nav-link">About Us</a>
+        <a href="services.html" class="nav-link">Services</a>
+        <a href="events.html"   class="nav-link">Events</a>
+        <a href="gallery.html"  class="nav-link">Gallery</a>
+        <a href="contact.html"  class="nav-link nav-link--active">Contact</a>
+      </div>
+      <button id="nav-toggle" class="md:hidden text-white p-2 -mr-2"
+        aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/8 mt-4 pt-5 pb-5 flex-col gap-5 max-w-6xl mx-auto" role="menu">
+      <a href="index.html"     class="nav-link block" role="menuitem">Home</a>
+      <a href="about.html"    class="nav-link block" role="menuitem">About Us</a>
+      <a href="services.html" class="nav-link block" role="menuitem">Services</a>
+      <a href="events.html"   class="nav-link block" role="menuitem">Events</a>
+      <a href="gallery.html"  class="nav-link block" role="menuitem">Gallery</a>
+      <a href="contact.html"  class="nav-link nav-link--active block" role="menuitem">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="pt-44 pb-12 px-6 text-center">
+      <p class="section-label">Reach Out</p>
+      <h1 class="hero-wordmark text-5xl md:text-7xl font-black text-white">Contact</h1>
+    </section>
+
+    <section class="section-divider py-20 px-6" aria-label="Contact information and form">
+      <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24">
+
+        <!-- Direct contact info -->
+        <div>
+          <p class="section-label">Direct Contact</p>
+
+          <div class="mb-10">
+            <p class="section-label" style="margin-bottom:6px; font-size:8px;">General Inquiries</p>
+            <!-- Populated by home.js from Supabase global_settings -->
+            <a href="mailto:hello@nevernotnice.co.za"
+               class="contact-email font-black text-white hover:opacity-60 transition-opacity"
+               style="font-size:1.1rem;">
+              hello@nevernotnice.co.za
+            </a>
+          </div>
+
+          <div class="mb-10">
+            <p class="section-label" style="margin-bottom:6px; font-size:8px;">Bookings &amp; Partnerships</p>
+            <a href="mailto:bookings@nevernotnice.co.za"
+               class="font-black text-white hover:opacity-60 transition-opacity"
+               style="font-size:1.1rem;">
+              bookings@nevernotnice.co.za
+            </a>
+          </div>
+
+          <div class="mb-10">
+            <p class="section-label" style="margin-bottom:6px; font-size:8px;">Based In</p>
+            <p class="font-bold text-white">Johannesburg, South Africa</p>
+          </div>
+
+          <div>
+            <p class="section-label" style="margin-bottom:1rem;">Follow</p>
+            <div class="flex flex-col gap-3">
+              <a href="https://instagram.com/nevernotnice"
+                 target="_blank" rel="noopener noreferrer"
+                 class="text-sm hover:text-white transition-colors"
+                 style="color:var(--color-text-faint); font-family:var(--font-mono);">
+                Instagram → @nevernotnice
+              </a>
+              <a href="https://tiktok.com/@nevernotnice"
+                 target="_blank" rel="noopener noreferrer"
+                 class="text-sm hover:text-white transition-colors"
+                 style="color:var(--color-text-faint); font-family:var(--font-mono);">
+                TikTok → @nevernotnice
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inquiry form -->
+        <div>
+          <p class="section-label">Send a Message</p>
+          <!-- Form uses mailto: as a zero-backend solution.
+               To upgrade: replace the JS handler below with a
+               fetch() POST to Formspree (https://formspree.io) -->
+          <div id="contact-form" novalidate>
+
+            <div class="form-field">
+              <label for="cf-name" class="form-label">Name</label>
+              <input id="cf-name" type="text" class="form-input"
+                placeholder="Your name" autocomplete="name" required />
+            </div>
+
+            <div class="form-field">
+              <label for="cf-email" class="form-label">Email</label>
+              <input id="cf-email" type="email" class="form-input"
+                placeholder="your@email.com" autocomplete="email" required />
+            </div>
+
+            <div class="form-field">
+              <label for="cf-subject" class="form-label">Subject</label>
+              <select id="cf-subject" class="form-select" required>
+                <option value="" disabled selected>Select an inquiry type</option>
+                <option value="Event Production">Event Production</option>
+                <option value="Creative Direction">Creative Direction</option>
+                <option value="Brand Partnership">Brand Partnership</option>
+                <option value="Cultural Consulting">Cultural Consulting</option>
+                <option value="Media & Press">Media &amp; Press</option>
+                <option value="General">General Inquiry</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="cf-message" class="form-label">Message</label>
+              <textarea id="cf-message" rows="5" class="form-textarea"
+                placeholder="Tell us what you're working on..." required></textarea>
+            </div>
+
+            <button id="cf-submit" type="button" class="btn-primary w-full text-center">
+              SEND MESSAGE
+            </button>
+
+            <div id="cf-feedback" class="hidden form-feedback" role="alert" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee strip -->
+    <div class="section-divider py-6 overflow-hidden" aria-hidden="true">
+      <div class="marquee-track">
+        <span style="font-family:var(--font-mono); font-size:9px; color:var(--color-text-faint); letter-spacing:0.3em; text-transform:uppercase; padding-right:4rem;">
+          Never Not Nice &nbsp;·&nbsp; Between Us (BÜ) &nbsp;·&nbsp; Archive &nbsp;·&nbsp; Joburg Subculture &nbsp;·&nbsp;
+          Never Not Nice &nbsp;·&nbsp; Between Us (BÜ) &nbsp;·&nbsp; Archive &nbsp;·&nbsp; Joburg Subculture &nbsp;·&nbsp;
+          Never Not Nice &nbsp;·&nbsp; Between Us (BÜ) &nbsp;·&nbsp; Archive &nbsp;·&nbsp; Joburg Subculture &nbsp;·&nbsp;
+          Never Not Nice &nbsp;·&nbsp; Between Us (BÜ) &nbsp;·&nbsp; Archive &nbsp;·&nbsp; Joburg Subculture &nbsp;·&nbsp;
+        </span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="section-divider py-10 px-6" role="contentinfo">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="section-label" style="margin-bottom:0;">© 2025 Never Not Nice</p>
+      <nav aria-label="Footer navigation">
+        <div class="flex gap-6">
+          <a href="events.html"  class="footer-link">Events</a>
+          <a href="gallery.html" class="footer-link">Gallery</a>
+        </div>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/home.js"></script>
+  <script>
+    document.getElementById('cf-submit').addEventListener('click', () => {
+      const name     = document.getElementById('cf-name').value.trim();
+      const email    = document.getElementById('cf-email').value.trim();
+      const subject  = document.getElementById('cf-subject').value;
+      const message  = document.getElementById('cf-message').value.trim();
+      const feedback = document.getElementById('cf-feedback');
+
+      // Basic validation
+      if (!name || !email || !subject || !message) {
+        feedback.textContent = 'Please fill in all fields before sending.';
+        feedback.className   = 'form-feedback form-feedback--error';
+        feedback.classList.remove('hidden');
+        return;
+      }
+
+      // Basic email format check
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        feedback.textContent = 'Please enter a valid email address.';
+        feedback.className   = 'form-feedback form-feedback--error';
+        feedback.classList.remove('hidden');
+        return;
+      }
+
+      const bodyEncoded    = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+      const subjectEncoded = encodeURIComponent(`[NNN Inquiry] ${subject}`);
+      window.location.href = `mailto:hello@nevernotnice.co.za?subject=${subjectEncoded}&body=${bodyEncoded}`;
+
+      feedback.textContent = 'Opening your mail app — thank you.';
+      feedback.className   = 'form-feedback form-feedback--success';
+      feedback.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
