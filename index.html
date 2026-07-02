@@ -124,10 +124,20 @@
             <div class="relative z-10 max-w-3xl mx-auto">
                 <p class="section-label mb-6">Joburg · Subculture Archives</p>
 
-                <!-- Populated by home.js — fallback shown until fetch resolves -->
-                <h1 id="hero-headline" class="hero-wordmark text-5xl sm:text-6xl md:text-8xl font-black text-[#1A1512] mb-10">
+                <!-- Populated by home.js — fallback shown until fetch resolves.
+                     UI/UX PATCH: font-size uses clamp() instead of fixed
+                     text-5xl/6xl/8xl breakpoints so "Never Not Nice." always
+                     fits on one line rather than wrapping at in-between widths. -->
+                <h1 id="hero-headline" class="hero-wordmark font-black text-[#1A1512] mb-4"
+                    style="font-size: clamp(2.25rem, 8vw, 6rem); white-space: nowrap;">
                     Never Not Nice.
                 </h1>
+
+                <!-- UI/UX PATCH — tagline, split out of hero_headline by home.js,
+                     sized independently so it doesn't compete with the wordmark -->
+                <p id="hero-subheadline" class="reveal-up" style="font-family: var(--font-mono); font-size: clamp(0.85rem, 2vw, 1.05rem); letter-spacing: 0.02em; color: var(--color-text-muted); margin-bottom: 2.5rem; max-width: 32ch; margin-left: auto; margin-right: auto;">
+                    Curating JHB's subculture archives.
+                </p>
 
                 <!-- href and text populated by home.js -->
                 <a id="hero-cta" href="events.html" class="btn-primary">
