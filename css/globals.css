@@ -136,33 +136,52 @@ body::after {
         box-shadow: 0 1px 0 var(--color-border);
     }
 
+/* UI/UX PATCH — softened, matches the gallery card's crossfade feel:
+   a rounded pill background that fades in via opacity (not a hard
+   border that snaps on), same slower 0.4s ease used for gallery
+   image scale/overlay transitions, so hover across the whole site
+   feels consistent rather than nav being its own separate language. */
 .nav-link {
     position: relative;
     display: inline-block;
     color: var(--color-text-muted);
-    transition: color var(--transition), border-color var(--transition), background var(--transition);
+    transition: color 0.4s ease;
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-family: var(--font-mono);
-    padding: 8px 14px;
-    border: 1px solid transparent;
-    border-radius: 2px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    z-index: 1;
 }
+
+    .nav-link::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(26, 21, 16, 0.06);
+        border-radius: inherit;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+    }
 
     .nav-link:hover {
         color: var(--color-text-primary);
-        border-color: var(--color-border-mid);
     }
 
-/* UI/UX PATCH — current page gets a solid filled state, not just a
-   color shift, so it's unmistakable at a glance rather than a subtle
-   tint you have to look for. */
+        .nav-link:hover::before {
+            opacity: 1;
+        }
+
+/* Current page — same soft pill, just always on, no border/fill snap */
 .nav-link--active {
-    color: var(--color-bg);
-    background: var(--color-text-primary);
-    border-color: var(--color-text-primary);
+    color: var(--color-text-primary);
 }
+
+    .nav-link--active::before {
+        opacity: 1;
+    }
 
 /* ── Logo image in nav ──────────────────────────────────────── */
 .nav-logo-img {
