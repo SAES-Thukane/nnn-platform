@@ -793,21 +793,17 @@ button:focus-visible {
 .hero-video-scrim {
     position: absolute;
     inset: 0;
-    background: rgba(245, 240, 230, 0.55);
+    background: rgba(245, 240, 230, 0.35);
     z-index: 1;
 }
 
-/* UI/UX PATCH — text over the hero video/photo needs to stay readable
-   regardless of what's happening in the footage underneath it (dark
-   corner, bright shirt, whatever). A soft cream halo does that without
-   needing the scrim itself to get heavy enough to kill the video. */
-.hero-content .section-label,
-#hero-subheadline {
-    text-shadow: 0 1px 12px var(--color-bg), 0 1px 3px var(--color-bg);
-}
-
-.hero-content #hero-headline {
-    text-shadow: 0 2px 20px var(--color-bg);
+/* UI/UX PATCH — reverted the text-shadow halo (read as highlighting,
+   not legibility). Instead: the hero's two .section-label instances
+   (eyebrow + "Scroll") go solid black. Scoped to #hero-section only —
+   every other .section-label sitewide (Brand Pillars, Footer, etc.)
+   stays the original muted gray, untouched. */
+#hero-section .section-label {
+    color: var(--color-text-primary);
 }
 
 /* UI/UX PATCH — mobile menu bleed-through fix. #main-nav is
@@ -838,6 +834,13 @@ button:focus-visible {
         font-size: 13px;
         padding: 16px 18px;
     }
+
+/* UI/UX PATCH — body scroll lock while mobile menu is open, toggled
+   by nav.js via body.nav-open. Prevents background scroll fighting
+   with the menu panel and cuts down on mistouches. */
+body.nav-open {
+    overflow: hidden;
+}
 
 /* 4-column premium feature grid */
 .feature-grid {
