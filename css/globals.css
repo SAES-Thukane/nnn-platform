@@ -137,18 +137,32 @@ body::after {
     }
 
 .nav-link {
+    position: relative;
+    display: inline-block;
     color: var(--color-text-muted);
-    transition: color var(--transition);
+    transition: color var(--transition), border-color var(--transition), background var(--transition);
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-family: var(--font-mono);
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: 2px;
 }
 
-    .nav-link:hover,
-    .nav-link--active {
+    .nav-link:hover {
         color: var(--color-text-primary);
+        border-color: var(--color-border-mid);
     }
+
+/* UI/UX PATCH — current page gets a solid filled state, not just a
+   color shift, so it's unmistakable at a glance rather than a subtle
+   tint you have to look for. */
+.nav-link--active {
+    color: var(--color-bg);
+    background: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+}
 
 /* ── Logo image in nav ──────────────────────────────────────── */
 .nav-logo-img {
@@ -185,24 +199,31 @@ body::after {
 }
 
 /* ── CTA Button ─────────────────────────────────────────────── */
+/* UI/UX PATCH — filled by default instead of hover-to-fill, plus a
+   ticket-stub notch cut into the top-right corner: a small, literal,
+   ownable nod to the brand actually being an event/ticketing house —
+   distinct from generic filled-pill or bordered-box CTAs. */
 .btn-primary {
     display: inline-block;
-    border: 1px solid rgba(26, 21, 16, 0.35);
-    color: var(--color-text-primary);
+    position: relative;
+    border: 1px solid var(--color-text-primary);
+    color: var(--color-bg);
+    background: var(--color-text-primary);
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.4em;
     text-transform: uppercase;
     padding: 14px 48px;
-    transition: background var(--transition), color var(--transition), border-color var(--transition);
-    background: transparent;
+    transition: transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
 }
 
     .btn-primary:hover {
-        background: var(--color-accent);
-        color: var(--color-bg);
-        border-color: var(--color-accent);
+        background: transparent;
+        color: var(--color-text-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 0 var(--color-border-mid);
     }
 
 /* ── IP Brand Cards ─────────────────────────────────────────── */
