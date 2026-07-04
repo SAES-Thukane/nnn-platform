@@ -801,13 +801,12 @@ button:focus-visible {
     z-index: 1;
 }
 
-/* UI/UX PATCH — reverted the text-shadow halo (read as highlighting,
-   not legibility). Instead: the hero's two .section-label instances
-   (eyebrow + "Scroll") go solid black. Scoped to #hero-section only —
-   every other .section-label sitewide (Brand Pillars, Footer, etc.)
-   stays the original muted gray, untouched. */
+/* UI/UX PATCH — hero text goes white now that the scrim is gone;
+   pure black no longer reads against raw, untinted video footage.
+   Scoped to #hero-section only — everywhere else on the page
+   (Brand Pillars, Footer, etc.) keeps the original muted gray. */
 #hero-section .section-label {
-    color: var(--color-text-primary);
+    color: #FFFFFF;
 }
 
 /* UI/UX PATCH — mobile menu bleed-through fix. #main-nav is
@@ -845,6 +844,28 @@ button:focus-visible {
 body.nav-open {
     overflow: hidden;
 }
+
+/* UI/UX PATCH — desktop nav links: white while the nav is transparent
+   (floating over the hero video), fading to the original dark tones
+   once #main-nav.nav--scrolled kicks in (solid cream block). Scoped
+   to .nnn-desktop-links only — #mobile-menu's full-screen cream panel
+   keeps its own always-dark text regardless of scroll state. The
+   0.4s color transition already on .nav-link is what makes this a
+   fade rather than a snap. */
+.nnn-desktop-links .nav-link,
+.nnn-desktop-links .nav-link:hover,
+.nnn-desktop-links .nav-link--active {
+    color: #FFFFFF;
+}
+
+#main-nav.nav--scrolled .nnn-desktop-links .nav-link {
+    color: var(--color-text-muted);
+}
+
+    #main-nav.nav--scrolled .nnn-desktop-links .nav-link:hover,
+    #main-nav.nav--scrolled .nnn-desktop-links .nav-link--active {
+        color: var(--color-text-primary);
+    }
 
 /* 4-column premium feature grid */
 .feature-grid {
