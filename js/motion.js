@@ -1,115 +1,875 @@
-// JavaScript source code
-// js/motion.js
-// ─────────────────────────────────────────────────────────────
-// Loads AFTER config.js + nav.js on every page that wants motion.
-// Three responsibilities:
-//   1. Lazy-load Lenis smooth-scroll — DESKTOP ONLY. On mobile the
-//      <script> tag is never even requested, so there's zero cost
-//      to the in-app-browser audience this site actually lives in.
-//   2. IntersectionObserver-based reveal-up animation — cheap,
-//      works everywhere, runs on every viewport.
-//   3. Vertical-slice accordion — hover-driven on desktop,
-//      tap-to-expand on mobile (hover doesn't really exist there).
-// ─────────────────────────────────────────────────────────────
+/* ============================================================
+   globals.css — NNN Design Token System
+   All visual decisions live here as CSS variables.
+   To restyle the entire site: edit the :root block only.
+   Tailwind handles layout. CSS variables handle brand identity.
+   ============================================================ */
 
-(function () {
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap');
 
-    // ── 1. Lenis — desktop only, lazily injected ──────────────────
-    if (isDesktop && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js';
-        script.onload = () => {
-            if (typeof Lenis === 'undefined') return;
-            const lenis = new Lenis({ duration: 1.1, easing: t => 1 - Math.pow(1 - t, 3) });
-            function raf(time) {
-                lenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
-        };
-        document.head.appendChild(script);
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *:: before, *::after { box - sizing: border - box; margin: 0; padding: 0; }
+
+/* ── UI/UX PATCH — added [this session] ───────────────────────
+   Self-hosted brand script font (from NICE_THINGS asset pack) +
+   Between Us (BÜ) and Archive brand colour tokens. Nothing above
+   or below this block was touched — this only ADDS to the system.
+   ─────────────────────────────────────────────────────────────── */
+@font-face {
+    font - family: 'Flawless';
+    src: url('../assets/fonts/Flawless-Regular.woff2') format('woff2'),
+        url('../assets/fonts/Flawless-Regular.woff') format('woff'),
+            url('../assets/fonts/Flawless-Regular.ttf') format('truetype');
+    font - weight: normal;
+    font - style: normal;
+    font - display: swap;
+}
+/* Available as a signature accent — not applied anywhere by default.
+   The existing --font-mono hero-wordmark treatment stays as your
+   locked-in headline style; use .font-script deliberately, in one
+   place, if/when you want the script mark to appear in copy. */
+.font - script { font - family: 'Flawless', cursive; font - weight: normal; }
+/* ── End UI/UX PATCH block 1 ──────────────────────────────────── */
+
+/* ── Design Tokens ──────────────────────────────────────────
+   UI POLISH PHASE: change values here only.
+   These cascade to every component automatically.
+   ─────────────────────────────────────────────────────────── */
+:root {
+    /* Colours — UI/UX PATCH: repainted from near-black to cream base.
+       Every variable name below is unchanged; only values flipped. */
+    --color - bg: #F5F0E6;
+    --color - bg - raised: #EDE4D3;
+    --color - bg - subtle: rgba(26, 21, 16, 0.035);
+    --color - border: rgba(26, 21, 16, 0.10);
+    --color - border - mid: rgba(26, 21, 16, 0.18);
+    --color - text - primary: #1A1512;
+    --color - text - muted:   #6B6156;
+    --color - text - faint: #A69C8C;
+    --color - accent:       #1A1512;
+
+    /* UI/UX PATCH — Between Us (BÜ): red / white */
+    --color - bu: #B31E2B;
+    --color - bu - dim:       #8E1622;
+
+    /* UI/UX PATCH — Archive: maroon / cream / black (cream reuses --color-text-primary) */
+    --color - archive:      #5C1620;
+    --color - archive - dim:  #47101A;
+
+    /* Typography */
+    --font - display: 'Space Grotesk', sans - serif;
+    --font - mono: 'Space Mono', monospace;
+
+    /* Spacing scale */
+    --space - xs: 0.5rem;
+    --space - sm: 1rem;
+    --space - md: 2rem;
+    --space - lg: 4rem;
+    --space - xl: 6rem;
+
+    /* Border radius */
+    --radius - sm: 8px;
+    --radius - md: 14px;
+    --radius - lg: 20px;
+
+    /* Nav height — used to offset hero padding */
+    --nav - height: 64px;
+
+    /* Transition */
+    --transition: 0.25s ease;
+
+    /* UI/UX PATCH — motion engine, shared by motion.js across all pages */
+    --ease - premium: cubic - bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+html {
+    scroll - behavior: smooth;
+    -webkit - text - size - adjust: 100 %;
+}
+
+body {
+    font - family: var(--font - display);
+    background - color: var(--color - bg);
+    color: var(--color - text - primary);
+    -webkit - font - smoothing: antialiased;
+    -moz - osx - font - smoothing: grayscale;
+    min - height: 100vh;
+    line - height: 1.6;
+}
+
+img  { display: block; max - width: 100 %; }
+a    { color: inherit; text - decoration: none; }
+button { cursor: pointer; font - family: inherit; }
+
+/* ── Grain overlay ──────────────────────────────────────────
+   Remove body::after block to disable the grain texture.
+   ─────────────────────────────────────────────────────────── */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer - events: none;
+    z - index: 9999;
+    opacity: 0.03;
+    background - image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background - repeat: repeat;
+}
+
+/* ── Navigation ─────────────────────────────────────────────── */
+#main - nav {
+    transition: background - color var(--transition), box - shadow var(--transition);
+}
+
+#main - nav.nav--scrolled {
+    background - color: rgba(245, 240, 230, 0.92);
+    backdrop - filter: blur(16px);
+    -webkit - backdrop - filter: blur(16px);
+    box - shadow: 0 1px 0 var(--color - border);
+}
+
+/* UI/UX PATCH — softened, matches the gallery card's crossfade feel:
+   a rounded pill background that fades in via opacity (not a hard
+   border that snaps on), same slower 0.4s ease used for gallery
+   image scale/overlay transitions, so hover across the whole site
+   feels consistent rather than nav being its own separate language. */
+.nav - link {
+    position: relative;
+    display: inline - block;
+    color: var(--color - text - muted);
+    transition: color 0.4s ease;
+    font - size: 10px;
+    letter - spacing: 0.2em;
+    text - transform: uppercase;
+    font - family: var(--font - mono);
+    padding: 8px 16px;
+    border - radius: 999px;
+    z - index: 1;
+}
+
+.nav - link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 21, 16, 0.06);
+    border - radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z - index: -1;
+}
+
+.nav - link:hover {
+    color: var(--color - text - primary);
+}
+.nav - link: hover::before {
+    opacity: 1;
+}
+
+/* Current page — same soft pill, just always on, no border/fill snap */
+.nav - link--active {
+    color: var(--color - text - primary);
+}
+.nav - link--active::before {
+    opacity: 1;
+}
+
+/* ── Logo image in nav ──────────────────────────────────────── */
+.nav - logo - img {
+    height: 28px;
+    width: auto;
+    /* UI/UX PATCH — logo is black; cream bg no longer needs the invert(1)
+       that was flipping it white for the old dark theme. */
+    transition: opacity var(--transition);
+}
+.nav - logo - img:hover { opacity: 0.7; }
+
+/* ── Hero wordmark style ────────────────────────────────────── */
+.hero - wordmark {
+    font - family: var(--font - mono);
+    letter - spacing: -0.03em;
+    line - height: 0.95;
+}
+
+/* ── Section utilities ──────────────────────────────────────── */
+.section - divider { border - top: 1px solid var(--color - border); }
+
+.section - label {
+    font - family: var(--font - mono);
+    font - size: 9px;
+    letter - spacing: 0.5em;
+    text - transform: uppercase;
+    color: var(--color - text - faint);
+    margin - bottom: var(--space - md);
+}
+
+/* ── CTA Button ─────────────────────────────────────────────── */
+/* UI/UX PATCH — filled by default instead of hover-to-fill, plus a
+   ticket-stub notch cut into the top-right corner: a small, literal,
+   ownable nod to the brand actually being an event/ticketing house —
+   distinct from generic filled-pill or bordered-box CTAs. */
+.btn - primary {
+    display: inline - block;
+    position: relative;
+    border: 1px solid var(--color - text - primary);
+    color: var(--color - bg);
+    background: var(--color - text - primary);
+    font - family: var(--font - mono);
+    font - size: 10px;
+    font - weight: 700;
+    letter - spacing: 0.4em;
+    text - transform: uppercase;
+    padding: 14px 48px;
+    transition:     transform var(--transition), box - shadow var(--transition), background var(--transition), color var(--transition);
+    clip - path: polygon(0 0, calc(100 % - 16px) 0, 100 % 16px, 100 % 100 %, 0 100 %);
+}
+.btn - primary:hover {
+    background: transparent;
+    color: var(--color - text - primary);
+    transform: translateY(-2px);
+    box - shadow: 0 6px 0 0 var(--color - border - mid);
+}
+
+/* UI/UX PATCH — hero CTA only: inverted from the shared .btn-primary
+   base (white box, black text) since it sits over the video, not on
+   cream. 404 and Services page buttons using .btn-primary elsewhere
+   are untouched. */
+#hero - cta {
+    background: #FFFFFF;
+    color: #0D0C0A;
+    border - color: #FFFFFF;
+}
+#hero - cta:hover {
+    background: transparent;
+    color: #FFFFFF;
+    border - color: #FFFFFF;
+    box - shadow: 0 6px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+/* ── IP Brand Cards ─────────────────────────────────────────── */
+.ip - card {
+    border: 1px solid var(--color - border);
+    border - radius: var(--radius - md);
+    padding: 1.5rem;
+    background: var(--color - bg - subtle);
+    transition: border - color var(--transition);
+}
+.ip - card--active { border - color: var(--color - border - mid); }
+.ip - card__header {
+    display: flex;
+    align - items: flex - start;
+    justify - content: space - between;
+    gap: 0.75rem;
+    margin - bottom: 1rem;
+}
+.ip - card__name {
+    font - size: 1.25rem;
+    font - weight: 900;
+    color: var(--color - text - primary);
+    line - height: 1.2;
+}
+.ip - card__badge {
+    flex - shrink: 0;
+    font - family: var(--font - mono);
+    font - size: 9px;
+    padding: 4px 10px;
+    border: 1px solid var(--color - border - mid);
+    border - radius: 99px;
+    color: var(--color - text - muted);
+    white - space: nowrap;
+}
+.ip - card__tagline {
+    font - size: 11px;
+    font - style: italic;
+    color: var(--color - text - faint);
+    margin - bottom: 0.5rem;
+}
+.ip - card__desc {
+    font - size: 13px;
+    color: var(--color - text - muted);
+    line - height: 1.7;
+}
+
+/* UI/UX PATCH — brand-specific accents, applied via JS based on ip_name.
+   ip-card--active (above) is untouched and still works independently. */
+.ip - card--bu       { border - color: var(--color - bu); }
+.ip - card--bu.ip - card__badge { border - color: var(--color - bu); color: var(--color - bu); }
+.ip - card--archive  { border - color: var(--color - archive); }
+.ip - card--archive.ip - card__badge { border - color: var(--color - archive); color: var(--color - archive); }
+
+/* ── Skeleton loaders ───────────────────────────────────────── */
+@keyframes skeleton - shimmer {
+    0 % { opacity: 0.04; }
+    50 % { opacity: 0.10; }
+    100 % { opacity: 0.04; }
+}
+.skeleton - pulse {
+    background: var(--color - text - primary);
+    border - radius: var(--radius - sm);
+    animation: skeleton - shimmer 1.6s ease -in -out infinite;
+}
+.ip - skeleton      { height: 160px; }
+.event - skeleton   { height: 60px; margin - bottom: 1px; }
+.gallery - skeleton { aspect - ratio: 1; border - radius: var(--radius - md); }
+
+/* ── Countdown ──────────────────────────────────────────────── */
+.countdown__clock {
+    display: flex;
+    align - items: center;
+    justify - content: center;
+    gap: 1.5rem;
+}
+.countdown__unit  { display: flex; flex - direction: column; align - items: center; }
+.countdown__num {
+    font - family: var(--font - mono);
+    font - size: clamp(2.5rem, 8vw, 4rem);
+    font - weight: 900;
+    color: var(--color - text - primary);
+    line - height: 1;
+}
+.countdown__label {
+    font - family: var(--font - mono);
+    font - size: 9px;
+    color: var(--color - text - faint);
+    text - transform: uppercase;
+    letter - spacing: 0.25em;
+    margin - top: 6px;
+}
+.countdown__sep {
+    font - family: var(--font - mono);
+    font - size: clamp(1.5rem, 5vw, 2.5rem);
+    font - weight: 900;
+    color: var(--color - text - faint);
+    align - self: flex - start;
+    margin - top: 4px;
+}
+.countdown__live {
+    display: flex;
+    align - items: center;
+    gap: 0.5rem;
+    font - family: var(--font - mono);
+    font - size: 1.1rem;
+    font - weight: 700;
+    color: var(--color - text - primary);
+}
+.countdown__live - dot {
+    width: 8px;
+    height: 8px;
+    border - radius: 50 %;
+    background:    #4ade80;
+    animation: live - pulse 1.5s ease -in -out infinite;
+}
+@keyframes live - pulse {
+    0 %, 100 % { opacity: 1; transform: scale(1); }
+    50 % { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ── Events Calendar ────────────────────────────────────────── */
+.event - row {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border - bottom: 1px solid var(--color - border);
+}
+.event - row: last - child { border - bottom: none; }
+.event - row__name {
+    font - size: 15px;
+    font - weight: 700;
+    color: var(--color - text - primary);
+    margin - bottom: 3px;
+}
+.event - row__meta {
+    font - size: 12px;
+    color: var(--color - text - muted);
+}
+.event - row__venue {
+    font - family: var(--font - mono);
+    font - size: 10px;
+    color: var(--color - text - faint);
+    margin - top: 3px;
+}
+.event - row__action { flex - shrink: 0; }
+.event - row__btn {
+    display: inline - block;
+    font - size: 11px;
+    font - weight: 700;
+    padding: 8px 18px;
+    border - radius: 99px;
+    background: var(--color - text - primary);
+    color: var(--color - bg);
+    transition:     opacity var(--transition);
+}
+.event - row__btn:hover { opacity: 0.85; }
+
+/* UI/UX PATCH — BÜ-branded ticket CTA (Quicket redirects) */
+.event - row__btn--bu {
+    background: var(--color - bu);
+    color: #ffffff;
+}
+.event - row__btn--bu:hover { background: var(--color - bu - dim); opacity: 1; }
+.event - row__badge {
+    display: inline - block;
+    font - family: var(--font - mono);
+    font - size: 10px;
+    padding: 6px 12px;
+    border - radius: 99px;
+}
+.event - row__badge--upcoming { background: var(--color - bg - subtle); color: var(--color - text - muted); }
+.event - row__badge--soldout  { background: var(--color - bg - subtle); color: var(--color - text - faint); }
+
+/* ── Gallery ────────────────────────────────────────────────── */
+.gallery - card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border - radius: var(--radius - md);
+    background: var(--color - bg - raised);
+    aspect - ratio: 1 / 1;
+}
+.gallery - card__img {
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+    transition: transform 0.6s ease;
+}
+.gallery - card: hover.gallery - card__img { transform: scale(1.05); }
+
+.gallery - card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear - gradient(to top, rgba(0, 0, 0, 0.75) 0 %, rgba(0, 0, 0, 0.05) 60 %, transparent 100 %);
+    display: flex;
+    flex - direction: column;
+    justify - content: flex - end;
+    padding: 1rem;
+    transition: opacity var(--transition);
+}
+.gallery - card: hover.gallery - card__overlay { opacity: 0; }
+
+.gallery - card__title { font - size: 13px; font - weight: 700; color: #fff; }
+.gallery - card__meta  { font - family: var(--font - mono); font - size: 10px; color: rgba(255, 255, 255, 0.6); margin - top: 2px; }
+
+.gallery - card__hover {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    justify - content: center;
+    opacity: 0;
+    transition:      opacity var(--transition);
+    padding: 1.5rem;
+    text - align: center;
+}
+.gallery - card: hover.gallery - card__hover { opacity: 1; }
+.gallery - card__hover - title { font - size: 15px; font - weight: 900; color: #fff; margin - bottom: 4px; }
+.gallery - card__hover - meta  { font - family: var(--font - mono); font - size: 10px; color: rgba(255, 255, 255, 0.5); margin - bottom: 16px; }
+.gallery - card__cta {
+    font - size: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 6px 16px;
+    border - radius: 99px;
+    font - family: var(--font - mono);
+}
+
+.gallery - card--error {
+    background: var(--color - bg - raised);
+    display: flex;
+    align - items: center;
+    justify - content: center;
+}
+.gallery - card--error::after {
+    content: 'Image unavailable';
+    font - family: var(--font - mono);
+    font - size: 10px;
+    color: var(--color - text - faint);
+}
+
+/* ── Error & Empty States ───────────────────────────────────── */
+.state - error, .state - empty {
+    text - align: center;
+    padding: 3rem 1rem;
+    font - family: var(--font - mono);
+    font - size: 12px;
+    color: var(--color - text - faint);
+}
+.state - error__retry {
+    margin - top: 1rem;
+    font - size: 11px;
+    text - decoration: underline;
+    cursor: pointer;
+    color: var(--color - text - muted);
+}
+
+/* ── Contact form fields ────────────────────────────────────── */
+.form - field { margin - bottom: 1.25rem; }
+.form - label {
+    display: block;
+    font - family: var(--font - mono);
+    font - size: 9px;
+    letter - spacing: 0.3em;
+    text - transform: uppercase;
+    color: var(--color - text - faint);
+    margin - bottom: 6px;
+}
+.form - input,
+.form - select,
+.form - textarea {
+    width: 100 %;
+    background: transparent;
+    border: 1px solid var(--color - border);
+    color: var(--color - text - primary);
+    font - size: 13px;
+    font - family: var(--font - display);
+    padding: 10px 14px;
+    border - radius: var(--radius - sm);
+    outline: none;
+    transition: border - color var(--transition);
+    appearance: none;
+}
+.form - input:: placeholder,
+.form - textarea::placeholder { color: var(--color - text - faint); }
+.form - input: focus,
+.form - select: focus,
+.form - textarea:focus { border - color: var(--color - border - mid); }
+.form - select { background: var(--color - bg - raised); cursor: pointer; }
+.form - textarea { resize: none; }
+.form - feedback {
+    font - family: var(--font - mono);
+    font - size: 11px;
+    text - align: center;
+    padding: 10px;
+    border - radius: var(--radius - sm);
+    margin - top: 0.75rem;
+}
+.form - feedback--error   { background: rgba(179, 30, 43, 0.08); color: #B31E2B; }
+.form - feedback--success { background: rgba(21, 128, 61, 0.08); color: #15803d; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.footer - link {
+    font - family: var(--font - mono);
+    font - size: 10px;
+    letter - spacing: 0.2em;
+    text - transform: uppercase;
+    color: var(--color - text - faint);
+    transition:     color var(--transition);
+}
+.footer - link:hover { color: var(--color - text - primary); }
+
+/* ── Marquee strip ──────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50 %); }
+}
+.marquee - track {
+    display: flex;
+    white - space: nowrap;
+    animation:  marquee 30s linear infinite;
+}
+
+/* ── Accessibility ──────────────────────────────────────────── */
+a: focus - visible,
+    button: focus - visible {
+    outline: 2px solid rgba(26, 21, 16, 0.6);
+    outline - offset: 4px;
+    border - radius: 2px;
+}
+
+.sr - only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white - space: nowrap;
+    border - width: 0;
+}
+
+/* ── UI/UX PATCH — Motion framework components (used by motion.js) ───
+   Desktop gets the full cinematic treatment; mobile gets a lighter,
+   static-friendly fallback baked directly into these same rules via
+   the max-width query at the bottom of this block, rather than JS
+   branching on every property. ─────────────────────────────────────── */
+
+/* Split/fade scroll reveal — motion.js toggles .is-visible via IntersectionObserver */
+.reveal - up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 900ms var(--ease - premium), transform 900ms var(--ease - premium);
+}
+.reveal - up.is - visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hero video layer — ships with graceful cream fallback if no video file yet */
+.hero - video - layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--color - bg - raised);
+}
+.hero - video - layer video {
+    position: absolute;
+    inset: 0;
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+    animation: hero - video - breathe 10s var(--ease - premium) infinite alternate;
+    /* UI/UX PATCH — live, adjustable saturation control. This is the
+       lever to pull for saturation complaints going forward — no need
+       to re-encode the video file itself, just change this number. */
+    filter: saturate(0.8);
+}
+@keyframes hero - video - breathe {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.0); }
+}
+.hero - video - scrim {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    z - index: 1;
+}
+
+/* UI/UX PATCH — hero text goes white now that the scrim is gone;
+   pure black no longer reads against raw, untinted video footage.
+   Scoped to #hero-section only — everywhere else on the page
+   (Brand Pillars, Footer, etc.) keeps the original muted gray. */
+#hero - section.section - label {
+    color: #FFFFFF;
+}
+
+/* UI/UX PATCH — mobile menu bleed-through fix. #main-nav is
+   intentionally transparent until scrolled (the premium sticky-nav
+   effect) — but that meant opening the mobile menu before scrolling
+   let the hero content behind it show straight through. This makes
+   the open menu its own solid, full-screen panel regardless of the
+   nav's scroll state. nav.js only ever toggles the .hidden class —
+   no JS changes needed for this fix. */
+#mobile - menu: not(.hidden) {
+    position: fixed;
+    top: var(--nav - height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color - bg);
+    z - index: 40;
+    display: flex!important;
+    flex - direction: column;
+    padding: 2rem 1.5rem;
+    gap: 0.5rem;
+    overflow - y: auto;
+    border - top: 1px solid var(--color - border);
+    margin - top: 0;
+}
+#mobile - menu: not(.hidden).nav - link {
+    font - size: 13px;
+    padding: 16px 18px;
+}
+
+/* UI/UX PATCH — body scroll lock while mobile menu is open, toggled
+   by nav.js via body.nav-open. Prevents background scroll fighting
+   with the menu panel and cuts down on mistouches. */
+body.nav - open {
+    overflow: hidden;
+}
+
+/* UI/UX PATCH — desktop nav links: white while the nav is transparent
+   (floating over the hero video), fading to the original dark tones
+   once #main-nav.nav--scrolled kicks in (solid cream block). Scoped
+   to .nnn-desktop-links only — #mobile-menu's full-screen cream panel
+   keeps its own always-dark text regardless of scroll state. The
+   0.4s color transition already on .nav-link is what makes this a
+   fade rather than a snap. */
+.nnn - desktop - links.nav - link,
+.nnn - desktop - links.nav - link: hover,
+.nnn - desktop - links.nav - link--active {
+    color: #FFFFFF;
+}
+#main - nav.nav--scrolled.nnn - desktop - links.nav - link {
+    color: var(--color - text - muted);
+}
+#main - nav.nav--scrolled.nnn - desktop - links.nav - link: hover,
+    #main - nav.nav--scrolled.nnn - desktop - links.nav - link--active {
+    color: var(--color - text - primary);
+}
+
+/* 4-column premium feature grid */
+.feature - grid {
+    display: grid;
+    grid - template - columns: repeat(1, 1fr);
+    gap: 1.5rem;
+}
+@media(min - width: 768px) { .feature - grid { grid - template - columns: repeat(2, 1fr); } }
+@media(min - width: 1024px) { .feature - grid { grid - template - columns: repeat(4, 1fr); } }
+
+.feature - card {
+    position: relative;
+    overflow: hidden;
+    aspect - ratio: 4 / 5;
+    background: var(--color - bg - raised);
+    border - radius: var(--radius - md);
+}
+.feature - card img {
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+    transition: transform 1200ms var(--ease - premium);
+}
+.feature - card:hover img { transform: scale(1.05); }
+.feature - card__label {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    background: var(--color - bg);
+    padding: 0.85rem 1rem;
+    font - family: var(--font - mono);
+    font - size: 10px;
+    letter - spacing: 0.25em;
+    text - transform: uppercase;
+    color: var(--color - text - muted);
+}
+
+/* Vertical-slice accordion — the signature move */
+.accordion {
+    display: flex;
+    width: 100 %;
+    height: 60vh;
+    gap: 0.75rem;
+    align - items: stretch;
+    overflow: hidden;
+}
+.accordion - panel {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border - radius: var(--radius - md);
+    cursor: pointer;
+    transition: flex - grow 1000ms var(--ease - premium);
+    background: var(--color - bg - raised);
+}
+.accordion - panel.is - active { flex - grow: 3.5; }
+.accordion - panel img {
+    position: absolute;
+    inset: 0;
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+}
+.accordion - panel__label {
+    position: absolute;
+    left: 0.75rem; bottom: 0.75rem; right: 0.75rem;
+    font - family: var(--font - mono);
+    font - size: 10px;
+    letter - spacing: 0.15em;
+    text - transform: uppercase;
+    color: #fff;
+    text - shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 400ms var(--ease - premium);
+}
+.accordion - panel.is - active.accordion - panel__label { opacity: 1; }
+
+/* Gallery — series-grouped horizontal rows */
+.gallery - series {
+    margin - bottom: var(--space - xl);
+}
+.gallery - series__label {
+    font - family: var(--font - mono);
+    font - size: 10px;
+    letter - spacing: 0.3em;
+    text - transform: uppercase;
+    color: var(--color - text - faint);
+    margin - bottom: 1rem;
+}
+.gallery - series__row {
+    display: flex;
+    gap: 0.75rem;
+    overflow - x: auto;
+    padding - bottom: 0.5rem;
+    scroll - snap - type: x proximity;
+}
+.gallery - series__row.gallery - card {
+    flex: 0 0 auto;
+    width: 240px;
+    aspect - ratio: 1 / 1;
+    scroll - snap - align: start;
+}
+
+/* ── Responsive: lighter motion on mobile ────────────────────────
+   Full parallax/video/accordion-hover stays desktop-only via JS
+   (motion.js checks matchMedia before initialising them at all).
+   This block is the CSS-side guarantee: even if JS runs, these
+   properties can't produce a heavy paint on small screens. ────── */
+@media(max - width: 767px) {
+  .hero - video - layer video { animation: none; }
+  .feature - card:hover img { transform: none; }
+  .accordion { height: auto; flex - direction: column; }
+  .accordion - panel { flex: none; height: 220px; }
+  .accordion - panel.is - active { flex - grow: 0; }
+  .accordion - panel.accordion - panel__label { opacity: 1; }
+  .reveal - up { transition - duration: 500ms; transform: translateY(12px); }
+}
+/* ── End UI/UX PATCH motion block ─────────────────────────────────── */
+
+/* UI/UX PATCH — hero slideshow (About Us). Multiple slides crossfade
+   via opacity, cycled by motion.js. Same scrim/legibility pattern as
+   the index.html video hero. */
+.hero - slideshow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--color - bg - raised);
+}
+.hero - slideshow__slide {
+    position: absolute;
+    inset: 0;
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+    opacity: 0;
+    transition: opacity 1400ms var(--ease - premium);
+}
+.hero - slideshow__slide.is - active {
+    opacity: 1;
+}
+
+/* UI/UX PATCH — static hero background image (Services). Single image,
+   no crossfade, same scrim pattern as the other hero treatments. */
+.hero - bg - image {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--color - bg - raised);
+}
+.hero - bg - image img {
+    position: absolute;
+    inset: 0;
+    width: 100 %;
+    height: 100 %;
+    object - fit: cover;
+}
+
+/* Shared scrim + legibility for both — matches index.html's hero-video-scrim */
+.hero - media - scrim {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    z - index: 1;
+}
+
+/* ── Responsive: mobile-first ───────────────────────────────── */
+@media(max - width: 640px) {
+  .event - row {
+        flex - direction: column;
+        align - items: flex - start;
+        gap: 0.75rem;
     }
-
-    // ── 2 & 3. Reveal + accordion wiring — reusable, since content
-    // fetched asynchronously (e.g. gallery.js's series rows) doesn't
-    // exist yet on the first pass at DOMContentLoaded. ──────────────
-    function initMotionFor(root) {
-        root = root || document;
-
-        // Scroll reveals
-        const revealEls = root.querySelectorAll('.reveal-up:not(.is-visible)');
-        if (revealEls.length && 'IntersectionObserver' in window) {
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                },
-                { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
-            );
-            revealEls.forEach((el) => observer.observe(el));
-        } else {
-            revealEls.forEach((el) => el.classList.add('is-visible'));
-        }
-
-        // Vertical-slice accordion
-        root.querySelectorAll('.accordion').forEach((accordion) => {
-            if (accordion.dataset.motionBound === 'true') return;
-            accordion.dataset.motionBound = 'true';
-            const panels = accordion.querySelectorAll('.accordion-panel');
-            if (!panels.length) return;
-
-            if (isDesktop) {
-                panels.forEach((panel) => {
-                    panel.addEventListener('mouseenter', () => {
-                        panels.forEach((p) => p.classList.remove('is-active'));
-                        panel.classList.add('is-active');
-                    });
-                });
-                accordion.addEventListener('mouseleave', () => {
-                    panels.forEach((p) => p.classList.remove('is-active'));
-                });
-            } else {
-                panels.forEach((panel) => {
-                    panel.addEventListener('click', () => {
-                        const wasActive = panel.classList.contains('is-active');
-                        panels.forEach((p) => p.classList.remove('is-active'));
-                        if (!wasActive) panel.classList.add('is-active');
-                    });
-                });
-            }
-        });
-    }
-
-    window.NNN_initMotionFor = initMotionFor;
-    document.addEventListener('DOMContentLoaded', () => initMotionFor(document));
-
-    // ── 4. Parallax collages — desktop only, throttled via rAF ──────
-    if (isDesktop) {
-        document.addEventListener('DOMContentLoaded', () => {
-            const parallaxEls = document.querySelectorAll('[data-parallax-speed]');
-            if (!parallaxEls.length) return;
-            let ticking = false;
-            function updateParallax() {
-                const scrollY = window.scrollY;
-                parallaxEls.forEach((el) => {
-                    const speed = parseFloat(el.dataset.parallaxSpeed) || 0.08;
-                    const rect = el.getBoundingClientRect();
-                    const offset = (scrollY - (scrollY + rect.top)) * speed;
-                    el.style.transform = `translateY(${offset}px)`;
-                });
-                ticking = false;
-            }
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    requestAnimationFrame(updateParallax);
-                    ticking = true;
-                }
-            }, { passive: true });
-        });
-    }
-})();
+  .countdown__clock { gap: 1rem; }
+  .countdown__sep   { display: none; }
+}
